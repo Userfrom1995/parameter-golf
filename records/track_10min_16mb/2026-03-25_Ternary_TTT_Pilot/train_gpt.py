@@ -651,13 +651,15 @@ class CausalSelfAttention(nn.Module):
             y = flash_attn_2_func(q, k.to(q.dtype), v.to(q.dtype), causal=True)
         else:
             # PyTorch fallback [B, H, T, D]
+            k_f, v_f = k, v
             if self.num_heads != self.num_kv_heads:
                 ratio = self.num_heads // self.num_kv_heads
-                k = k.repeat_interleave(ratio, dim=2)
-                v = v.repeat_interleave(ratio, dim=2)
-            q, k, v = q.transpose(1, 2), k.transpose(1, 2), v.transpose(1, 2)
-            y = F.scaled_dot_product_attention(q, k.to(q.dtype), v.to(q.dtype), is_causal=True)
+                k_f = k_f.repeat_interleave(ratio, dim=2)
+                v_f = v_f.repeat_interleave(ratio, dim=2)
+            q_f, k_f, v_f = q.transpose(1, 2), k_f.transpose(1, 2), v_f.transpose(1, 2)
+            y = F.scaled_dot_product_attention(q_f, k_f.to(q.dtype), v_f.to(q.dtype), is_causal=True)
             y = y.transpose(1, 2)
+
 
 
         if self.use_xsa:
