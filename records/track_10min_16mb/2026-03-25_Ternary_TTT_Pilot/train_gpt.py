@@ -102,9 +102,6 @@ class Hyperparameters:
     ttt_momentum = float(os.environ.get("TTT_MOMENTUM", 0.9))
     ttt_batch_seqs = int(os.environ.get("TTT_BATCH_SEQS", 32))
     ttt_grad_clip = float(os.environ.get("TTT_GRAD_CLIP", 1.0))
-    # Ternary (1.58-bit) settings
-    ternary_enabled = bool(int(os.environ.get("TERNARY_ENABLED", "0")))
-    bitnet_group_size = int(os.environ.get("BITNET_GROUP_SIZE", 64))
 
 
 # --- Batched Newton-Schulz orthogonalization ---
